@@ -1,0 +1,9 @@
+2023-07-08 18:29:55.249 +03:00 [INF] Startup entry point
+2023-07-08 18:29:55.261 +03:00 [INF] Point 2
+2023-07-08 18:29:55.405 +03:00 [INF] Startup passed ok
+2023-07-08 18:30:38.523 +03:00 [INF] Startup entry point
+2023-07-08 18:30:38.536 +03:00 [INF] Point 2
+2023-07-08 18:30:38.668 +03:00 [INF] Startup passed ok
+2023-07-08 19:54:24.104 +03:00 [INF] Startup entry point
+2023-07-08 19:54:24.118 +03:00 [INF] Point 2
+2023-07-08 19:54:24.305 +03:00 [INF] Startup passed ok
