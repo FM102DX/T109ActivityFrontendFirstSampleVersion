@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +19,9 @@ namespace T109.ActiveDive.EventCatalogue.EventCatalogueApi
 {
     public class Startup
     {
+
+        private Serilog.ILogger _logger;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -36,10 +40,11 @@ namespace T109.ActiveDive.EventCatalogue.EventCatalogueApi
 
             string logFilePath = System.IO.Path.Combine(logsFolder, GetNextFreeFileName(logsFolder, "T109.EventWebApi.Startup.Logs", "txt"));
 
-            Serilog.ILogger _logger = new LoggerConfiguration()
+             _logger = new LoggerConfiguration()
                                     .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
                                     .Enrich.FromLogContext()
                                     .WriteTo.File(logFilePath)
+                                    .WriteTo.Debug()
                                     .CreateLogger();
 
             _logger.Information("Startup entry point");
@@ -87,6 +92,22 @@ namespace T109.ActiveDive.EventCatalogue.EventCatalogueApi
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var serverAddressesFeature = app.ServerFeatures.Get<IServerAddressesFeature>();
+            
+            if(serverAddressesFeature.Addresses.Count>0)
+            {
+                var address = serverAddressesFeature.Addresses.First();
+                _logger.Information($"Listening on the following addresses: {serverAddressesFeature.Addresses.FirstOrDefault()}");
+            }
+            else
+            {
+                _logger.Information($"No addresses found");
+            }
+
+
+
+
+
             if (env.IsDevelopment())
             {
 
@@ -127,3 +148,4 @@ namespace T109.ActiveDive.EventCatalogue.EventCatalogueApi
         }
     }
 }
+

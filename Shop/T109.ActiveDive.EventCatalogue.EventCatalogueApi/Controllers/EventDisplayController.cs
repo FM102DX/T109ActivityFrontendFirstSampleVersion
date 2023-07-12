@@ -6,7 +6,7 @@ using T109.ActiveDive.Core;
 namespace T109.ActiveDive.EventCatalogue.EventCatalogueApi
 {
     [ApiController]
-    [Route("api/eventdata")]
+    [Route("/")]
     public class EventDisplayController : Controller
     {
         public DiveEventInMemoryManager Manager { get; set; }

@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="PublishProfiles\" />
     <Folder Include="wwwroot\EventData\Event1\" />
     <Folder Include="wwwroot\EventData\Event2\" />
     <Folder Include="wwwroot\EventData\Event3\" />
