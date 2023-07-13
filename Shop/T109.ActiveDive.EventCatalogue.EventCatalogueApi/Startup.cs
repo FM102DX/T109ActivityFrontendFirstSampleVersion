@@ -36,7 +36,7 @@ namespace T109.ActiveDive.EventCatalogue.EventCatalogueApi
             
             var rootFolder = Directory.GetCurrentDirectory();
 
-            var logsFolder = System.IO.Path.Combine(rootFolder, "Logs");
+            var logsFolder = System.IO.Path.Combine(rootFolder, "logs");
 
             string logFilePath = System.IO.Path.Combine(logsFolder, GetNextFreeFileName(logsFolder, "T109.EventWebApi.Startup.Logs", "txt"));
 
@@ -49,34 +49,16 @@ namespace T109.ActiveDive.EventCatalogue.EventCatalogueApi
 
             _logger.Information("Startup entry point");
 
-            _logger.Information($"logsFolder={logsFolder}");
-
             services.AddSingleton(typeof(Serilog.ILogger), (x) => _logger);
 
             #endregion
 
-            // string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
             services.AddCors(confg =>
                 confg.AddPolicy("AllowAll",
                     p => p.AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader()));
-
-            /*
-             * services.AddCors(options =>
-            {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
-                                  builder =>
-                                  {
-                                      builder.WithOrigins("https://activediving.t109.tech",
-                                                          "https://activediveeventapi.t109.tech",
-                                                          "https://localhost:44350",
-                                                          "https://localhost:44372",
-                                                          "https://mtest1092.azurewebsites.net");
-                                  });
-            });
-            */
 
             services.AddSingleton(typeof(DiveEventInMemoryManager), (x) => new DiveEventInMemoryManager("https://storeapi01.t109.tech"));
 
@@ -92,26 +74,6 @@ namespace T109.ActiveDive.EventCatalogue.EventCatalogueApi
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var serverAddressesFeature = app.ServerFeatures.Get<IServerAddressesFeature>();
-            
-            if(serverAddressesFeature.Addresses.Count>0)
-            {
-                var address = serverAddressesFeature.Addresses.First();
-                _logger.Information($"Listening on the following addresses: {serverAddressesFeature.Addresses.FirstOrDefault()}");
-            }
-            else
-            {
-                _logger.Information($"No addresses found");
-            }
-
-
-
-
-
-            if (env.IsDevelopment())
-            {
-
-            }
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ActiveDiveEventWebApi"));

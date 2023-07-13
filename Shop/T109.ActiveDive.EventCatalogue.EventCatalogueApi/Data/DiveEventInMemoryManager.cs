@@ -107,9 +107,9 @@ namespace T109.ActiveDive.EventCatalogue.EventCatalogueApi
             });
             foreach (ActiveDiveEvent item in repo.GetAll())
             {
-                item.FirstPic = $@"{FullHttpAddress}\EventData\{item.Alias}\1.jpg";
-                item.SecondPic = $@"{FullHttpAddress}\EventData\{item.Alias}\2.jpg";
-                item.ThirdPic = $@"{FullHttpAddress}\EventData\{item.Alias}\3.jpg";
+                item.FirstPic = $@"{FullHttpAddress}\eventdata\{item.Alias}\1.jpg";
+                item.SecondPic = $@"{FullHttpAddress}\eventdata\{item.Alias}\2.jpg";
+                item.ThirdPic = $@"{FullHttpAddress}\eventdata\{item.Alias}\3.jpg";
             }
         }
 
