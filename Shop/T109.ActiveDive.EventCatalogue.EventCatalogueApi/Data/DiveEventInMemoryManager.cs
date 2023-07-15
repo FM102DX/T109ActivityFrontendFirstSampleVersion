@@ -10,9 +10,9 @@ namespace T109.ActiveDive.EventCatalogue.EventCatalogueApi
     {
         public InMemoryRepository<ActiveDiveEvent> Repository => repo; 
 
-        public InMemoryRepository<ActiveDiveEvent> repo = new InMemoryRepository<ActiveDiveEvent>();
+        private InMemoryRepository<ActiveDiveEvent> repo = new InMemoryRepository<ActiveDiveEvent>();
 
-        string FullHttpAddress { get; set; }
+        public string FullHttpAddress { get; set; }
 
         public DiveEventInMemoryManager(string fullHttpAddress)
         {

@@ -7,5 +7,8 @@ namespace T109.ActiveDive.EventCatalogue.EventCatalogueApi
     {
         public List<ActiveDiveEvent> ItemList { get; set; }
         public string CssPath { get; set; }
+
+        public string SwaggerFullPath { get; set; }
+
     }
 }

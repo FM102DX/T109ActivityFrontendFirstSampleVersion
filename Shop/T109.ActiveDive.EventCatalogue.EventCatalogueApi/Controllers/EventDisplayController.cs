@@ -25,7 +25,8 @@ namespace T109.ActiveDive.EventCatalogue.EventCatalogueApi
             {
                 ItemList = Manager.GetAllAsList(),
                 CssPath = @"/css/ControllerStyle.css",
-             }; 
+                SwaggerFullPath= @$"{Manager.FullHttpAddress}/swagger/index.html"
+            }; 
             return View("EventBase", viewModel);
         }
 

@@ -7,6 +7,7 @@ using Serilog.Core;
 using Serilog.Events;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,46 +19,63 @@ namespace T109.ActiveDive.FrontEnd.Blazor
 {
     public class Program
     {
+        private static Serilog.ILogger _logger;
+
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
             builder.RootComponents.Add<App>("#app");
 
-            // builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            var rootFolder = Directory.GetCurrentDirectory();
 
-            Serilog.ILogger logger = new LoggerConfiguration()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
-            .Enrich.FromLogContext()
-            .WriteTo.BrowserConsole()
-            .CreateLogger();
+            var logsFolder = System.IO.Path.Combine(rootFolder, "logs");
 
-            builder.Services.AddSingleton(typeof(Serilog.ILogger), (x) => logger);
+            string logFilePath = System.IO.Path.Combine(logsFolder, GetNextFreeFileName(logsFolder, "T109.EventWebApi.Startup.Logs", "txt"));
 
-            /*
-            builder.Services.AddSingleton(typeof(Serilog.ILogger), (x) => new LoggerConfiguration()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
-            .Enrich.FromLogContext()
-            //.WriteTo.Http(requestUri: "https://logging.ricompany.info/api/v1/log-events")
-            .CreateLogger());
+            _logger = new LoggerConfiguration()
+                                   .MinimumLevel.Override("Microsoft", LogEventLevel.Debug)
+                                   .Enrich.FromLogContext()
+                                   .WriteTo.BrowserConsole()
+                                   .WriteTo.File(logFilePath)
+                                   .CreateLogger();
 
-            */
+            _logger.Information("p1--App entry point to configuration");
 
+            builder.Services.AddSingleton(typeof(Serilog.ILogger), (x) => _logger);
 
-            builder.Services.AddScoped(typeof(WebApiAsyncRepository<ActiveDiveEvent>), (x) => new WebApiAsyncRepository<ActiveDiveEvent>(logger)
-                                                                                                            .SetGetAllHostPath("api/eventdata/getall/")
-                                                                                                            .SetSearchHostPath("api/eventdata/search/")
-                                                                                                            .SetGetByIdOrNullHostPath("api/eventdata/GetByIdOrNull/")
-                                                                                                            .SetBaseAddress("https://activediveeventapi.t109.tech"));
+            builder.Services.AddScoped(typeof(WebApiAsyncRepository<ActiveDiveEvent>), (x) => new WebApiAsyncRepository<ActiveDiveEvent>(_logger)
+                                                                                                            .SetGetAllHostPath("getall/")
+                                                                                                            .SetSearchHostPath("search/")
+                                                                                                            .SetGetByIdOrNullHostPath("getbyIdornull/")
+                                                                                                            .SetBaseAddress("https://storeapi01.t109.tech"));
 
-           builder.Services.AddScoped(typeof(StoreManager), typeof(StoreManager));
-
+            builder.Services.AddScoped(typeof(StoreManager), typeof(StoreManager));
 
             builder.Services.AddScoped(typeof(ComponentHub), (x) => new ComponentHub());
 
             builder.Services.AddSingleton(typeof(FrontEndSettings), (x) => new FrontEndSettings(false, false, false));
 
-            await builder.Build().RunAsync();
+            _logger.Information("p2--configuration passed");
 
+            await builder.Build().RunAsync();
+        }
+
+        private static string GetNextFreeFileName(string path, string nameBase, string extention)
+        {
+            String s;
+            int i = 0;
+            do
+            {
+                s = Path.Combine(path, $"{nameBase}_{i}.{extention}");
+                if (!File.Exists(s)) { return s; }
+                i++;
+                if (i > 10000)
+                {
+                    throw new Exception($"Too much log files in directory {path}, please consider clearing");
+                }
+            }
+            while (true);
         }
     }
 }
