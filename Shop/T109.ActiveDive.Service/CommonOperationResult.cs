@@ -4,25 +4,32 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace T109.ActiveDive.Service
+namespace ActivityScheduler.Shared
 {
     public class CommonOperationResult
     {
         public bool Success { get; set; }
-        public string Msg { get; set; }
-        public object ReturningValue { get; set; }
+        public string Message { get; set; } = "";
+        public object? ReturningValue { get; set; }
+        public object? ControlObject { get; set; } //used to drag form controls through these messages
+        public Action? StoredAction { get; set; } //used to drag Action delegates through these messages
 
-        public static CommonOperationResult getInstance(bool success, string msg, object returningValue = null)
+        public static CommonOperationResult GetInstance(bool success, string msg, object returningValue = null)
         {
-            CommonOperationResult c = new CommonOperationResult();
-            c.Success = success;
-            c.Msg = msg;
-            c.ReturningValue = returningValue;
+            CommonOperationResult c = new CommonOperationResult()
+            {
+                Message = msg,
+                ReturningValue = returningValue,
+                Success = success
+            };
             return c;
         }
 
-        public static CommonOperationResult SayFail(string msg = "") { return getInstance(false, msg, null); }
-        public static CommonOperationResult SayOk(string msg = "") { return getInstance(true, msg, null); }
+        public static CommonOperationResult SayFail(string _msg = "") { return GetInstance(false, _msg, null); }
+        public static CommonOperationResult SayOk(string _msg = "") { return GetInstance(true, _msg, null); }
+        public static CommonOperationResult SayItsNull(string _msg = "") { return GetInstance(true, _msg, null); }
+        public string AsShrotString() => $"Operation resilt: success={Success} message={Message}";
 
+        public Guid ReturningGuid { get; set; }
     }
 }

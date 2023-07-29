@@ -46,7 +46,7 @@ namespace T109.ActiveDive.FrontEnd.Blazor
 
             builder.Services.AddScoped(typeof(WebApiAsyncRepository<ActiveDiveEvent>), (x) => new WebApiAsyncRepository<ActiveDiveEvent>(_logger)
                                                                                                             .SetGetAllHostPath("getall/")
-                                                                                                            .SetSearchHostPath("search/")
+                                                                                                            .SetSearchHostPath("search")
                                                                                                             .SetGetByIdOrNullHostPath("getbyIdornull/")
                                                                                                             .SetBaseAddress("https://storeapi01.t109.tech"));
 
